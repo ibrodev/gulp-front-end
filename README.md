@@ -2,7 +2,7 @@
 
 ## Clone the git repo
  ```
- git clone 
+ git clone https://github.com/ibrodev/gulp-front-end.git
  ```
 
  ## Change directory to gulp-front-end
