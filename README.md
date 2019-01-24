@@ -11,7 +11,7 @@
  cd gulp-front-end
  ```
 
- ## Install dependancy packages
+ ## Install dependency packages
 
  ```
  npm install 
