@@ -26,6 +26,10 @@ const {assign} = require('lodash');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 
+// image compression
+const image = require('gulp-image');
+
+
 
 // add custom browserify options here
 var customOpts = {
@@ -42,6 +46,24 @@ function views(){
             }))
             .pipe(dest('./dist'))
             .pipe(browserSync.stream());    
+}
+
+// image 
+function imageCompress(){
+    return src('./src/images/**/*')
+            .pipe(image({
+                optipng: ['-i 1', '-strip all', '-fix', '-o7', '-force'],
+                pngquant: ['--speed=1', '--force', 256],
+                zopflipng: ['-y', '--lossy_8bit', '--lossy_transparent'],
+                jpegRecompress: ['--strip', '--quality', 'medium', '--min', 40, '--max', 80],
+                mozjpeg: ['-optimize', '-progressive'],
+                guetzli: ['--quality', 85],
+                gifsicle: ['--optimize'],
+                svgo: ['--enable', 'cleanupIDs', 'convertColors'],
+                concurrent: 10,
+                quiet: true
+              }))
+            .pipe(dest('./dist/images'))
 }
 
 // Styles sass
@@ -106,13 +128,15 @@ function watchFiles(){
     watch('./src/views/**/*.pug', views);
     watch('./src/sass/**/*.sass', styles);
     watch('./src/js/**/*.js', scripts);
+    watch('./src/images/*', imageCompress);
 }
 
 
 exports.views = views;
 exports.styles = styles;
+exports.imageCompress = imageCompress;
 exports.scripts = parallel(scripts, bundle);
 
-exports.default = parallel(views, styles, parallel(scripts, bundle), parallel(serve, watchFiles));
+exports.default = parallel(views, styles, imageCompress, parallel(scripts, bundle), parallel(serve, watchFiles));
 
 
