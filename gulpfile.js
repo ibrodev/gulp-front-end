@@ -113,6 +113,6 @@ exports.views = views;
 exports.styles = styles;
 exports.scripts = parallel(scripts, bundle);
 
-exports.default = parallel(views, styles, parallel(scripts, bundle), series(serve, watchFiles));
+exports.default = parallel(views, styles, parallel(scripts, bundle), parallel(serve, watchFiles));
 
 
